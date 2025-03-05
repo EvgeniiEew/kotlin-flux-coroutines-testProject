@@ -1,6 +1,6 @@
 package com.senla.kotlin.controller
 
-import com.senla.kotlin.domain.Author
+import com.senla.kotlin.dto.AuthorDto
 import com.senla.kotlin.service.AuthorService
 import kotlinx.coroutines.flow.Flow
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/author")
-class AuthorController (@Autowired private val authorService: AuthorService) {
+class AuthorController(@Autowired private val authorService: AuthorService) {
     @PostMapping()
-    suspend fun addAuthor(@RequestBody author : Author): Author {
-        return authorService.setAuthor(author)
+    suspend fun saveAuthor(@RequestBody authorDto: AuthorDto): AuthorDto {
+        return authorService.saveAuthor(authorDto)
     }
 
     @GetMapping("/get")
-    suspend fun getAllAuthor(): Flow<Author> {
-      return  authorService.getAllAuthor()
+    suspend fun getAllAuthor(): Flow<AuthorDto> {
+        return authorService.getAllAuthor()
     }
 
 }
