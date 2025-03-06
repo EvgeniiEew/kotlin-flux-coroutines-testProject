@@ -1,4 +1,4 @@
-package com.senla.kotlin.config
+package com.senla.kotlin.controller.webFilter
 
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
