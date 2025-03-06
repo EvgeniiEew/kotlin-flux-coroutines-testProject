@@ -11,24 +11,25 @@ import java.util.*
 
 @Component
 class LoggingWebFilter : WebFilter {
-
     private val logger = LoggerFactory.getLogger(LoggingWebFilter::class.java)
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        val request = exchange.request
         val requestId = UUID.randomUUID().toString()
         MDC.put("requestId", requestId)
-
-        logger.info("Incoming request: ${request.method} ${request.uri} - requestId: $requestId")
-
-        return chain.filter(exchange)
+        val mutatedExchange = exchange.mutate().build()
+        return chain.filter(mutatedExchange)
+            .doFinally { MDC.clear() }
             .doOnSuccess {
-                logger.info("Response sent: ${exchange.response.statusCode} - requestId: $requestId")
-                MDC.clear()
+                val logMessage = mutatedExchange.attributes["logMessage"] as? String ?: "Processing request"
+                logger.info("Response sent: ${exchange.response.statusCode} - $logMessage - requestId: $requestId")
             }
             .doOnError { error ->
-                logger.error("Request failed: ${request.method} ${request.uri} - requestId: $requestId", error)
-                MDC.clear()
+                val logMessage = mutatedExchange.attributes["logMessage"] as? String ?: "Processing request"
+                logger.error(
+                    "Request failed: ${exchange.request.method} ${exchange.request.uri} - $logMessage - requestId: $requestId",
+                    error
+                )
             }
+            .contextWrite { it.put("requestId", requestId) }
     }
 }
