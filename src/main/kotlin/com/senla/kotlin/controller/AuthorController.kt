@@ -1,5 +1,6 @@
 package com.senla.kotlin.controller
 
+//import com.senla.kotlin.annotation.LogExecution
 import com.senla.kotlin.dto.AuthorDto
 import com.senla.kotlin.service.AuthorService
 import kotlinx.coroutines.flow.Flow
@@ -21,27 +22,29 @@ class AuthorController(@Autowired private val authorService: AuthorService) {
     private val logger: Logger = LoggerFactory.getLogger(AuthorController::class.java)
 
     @PostMapping()
+//    @LogExecution
     suspend fun saveAuthor(@RequestBody authorDto: AuthorDto): AuthorDto {
-        val requestId = UUID.randomUUID().toString()
-        MDC.put("requestId", requestId)
-        try {
-            logger.info("Save new author")
+//        val requestId = UUID.randomUUID().toString()
+//        MDC.put("requestId", requestId)
+//        try {
+//            logger.info("Save new author")
             return authorService.saveAuthor(authorDto)
-        }finally {
-            MDC.clear()
-        }
+//        }finally {
+//            MDC.clear()
+//        }
     }
 
     @GetMapping("/get")
+//    @LogExecution
     suspend fun getAllAuthor(): Flow<AuthorDto> {
-        val requestId = UUID.randomUUID().toString()
-        MDC.put("requestId", requestId)
-        try {
-            logger.info("Fetching all authors")
+//        val requestId = UUID.randomUUID().toString()
+//        MDC.put("requestId", requestId)
+//        try {
+//            logger.info("Fetching all authors")
             return authorService.getAllAuthor()
-        } finally {
-            MDC.clear()
-        }
+//        } finally {
+//            MDC.clear()
+//        }
     }
 
 }
