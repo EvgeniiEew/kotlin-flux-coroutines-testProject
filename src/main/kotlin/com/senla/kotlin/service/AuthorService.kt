@@ -1,9 +1,9 @@
 package com.senla.kotlin.service
 
 import com.senla.kotlin.dto.AuthorDto
-import reactor.core.publisher.Flux
+import kotlinx.coroutines.flow.Flow
 
 interface AuthorService {
     suspend fun saveAuthor(author: AuthorDto) : AuthorDto?
-    fun getAllAuthor(): Flux<AuthorDto>
+    suspend fun getAllAuthor(): Flow<AuthorDto>
 }

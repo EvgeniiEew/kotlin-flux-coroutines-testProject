@@ -1,9 +1,8 @@
 package com.senla.kotlin.repository
 
 import com.senla.kotlin.domain.Author
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
 
-interface AuthorRepository: ReactiveMongoRepository<Author, String> {
-    suspend fun save( author: Author) : Author
+interface AuthorRepository: CoroutineCrudRepository<Author, String> {
 }

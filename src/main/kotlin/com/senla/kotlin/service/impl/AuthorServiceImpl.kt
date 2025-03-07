@@ -4,12 +4,13 @@ import com.senla.kotlin.dto.AuthorDto
 import com.senla.kotlin.mapper.AuthorMapper
 import com.senla.kotlin.repository.AuthorRepository
 import com.senla.kotlin.service.AuthorService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Flux
 
 @Service
 class AuthorServiceImpl(
@@ -18,29 +19,28 @@ class AuthorServiceImpl(
     private val logger: Logger = LoggerFactory.getLogger(AuthorServiceImpl::class.java)
 
 
-
-    override suspend fun saveAuthor(author: AuthorDto): AuthorDto? {
-        val requestId = MDC.get("requestId")
-        logger.info("Starting saveAuthor for requestId: $requestId")
-        try {
-            val savedAuthor = authorRepository.save(authorMapper.toAuthor(author))
-            val result = authorMapper.toDto(savedAuthor)
-            logger.info("Successfully saved author for requestId: $requestId")
-            return result
-        } catch (e: Exception) {
-            logger.error("Error occurred while saving author for requestId: $requestId", e)
-            throw e
-        }
-    }
-
-    override fun getAllAuthor(): Flux<AuthorDto> {
-
-//        logger.info("Starting getAllAuthor for requestId: $requestId")
-//        try {
-//            val
+    override suspend fun saveAuthor(author: AuthorDto): AuthorDto {
+//        logger.info("Starting saveAuthor")
+//        return try {
+//            val savedAuthor = authorRepository.save(authorMapper.toAuthor(author))
+//            val result = authorMapper.toDto(savedAuthor)
+//            logger.info("Successfully saved author")
+//            result
+//        } catch (e: Exception) {
+//            logger.error("Error occurred while saving author", e)
+//            throw e
 //        }
-
-
-        return authorRepository.findAll().map { author -> authorMapper.toDto(author) };
+//    }
+        logger.info("Starting saveAuthor")
+            val savedAuthor = authorMapper.toDto(authorRepository.save(authorMapper.toAuthor(author)))
+            logger.info("Successfully saved author")
+     return       savedAuthor
+    }
+    override suspend fun getAllAuthor(): Flow<AuthorDto> {
+        val authorFlow = authorRepository.findAll()
+        logger.info("Fetched all author")
+        val authorDtoFlow = authorFlow.map { author -> authorMapper.toDto(author) }
+        logger.info("Successfully fetched all authors")
+        return authorDtoFlow
     }
 }
