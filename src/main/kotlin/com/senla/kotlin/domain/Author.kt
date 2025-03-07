@@ -1,11 +1,11 @@
 package com.senla.kotlin.domain
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
+import org.springframework.data.mongodb.core.mapping.Document
 
-@Table(name= "Author")
+@Document( collection = "author")
 data class Author(
     @Id
-    val id: Long? = null,
+    val id: String? = null,
     val name: String
 )

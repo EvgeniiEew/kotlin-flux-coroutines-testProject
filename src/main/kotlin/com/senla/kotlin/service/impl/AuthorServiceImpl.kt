@@ -4,13 +4,12 @@ import com.senla.kotlin.dto.AuthorDto
 import com.senla.kotlin.mapper.AuthorMapper
 import com.senla.kotlin.repository.AuthorRepository
 import com.senla.kotlin.service.AuthorService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 
 @Service
 class AuthorServiceImpl(
@@ -20,7 +19,7 @@ class AuthorServiceImpl(
 
 
 
-    override suspend fun saveAuthor(author: AuthorDto): AuthorDto {
+    override suspend fun saveAuthor(author: AuthorDto): AuthorDto? {
         val requestId = MDC.get("requestId")
         logger.info("Starting saveAuthor for requestId: $requestId")
         try {
@@ -34,7 +33,14 @@ class AuthorServiceImpl(
         }
     }
 
-    override fun getAllAuthor(): Flow<AuthorDto> {
+    override fun getAllAuthor(): Flux<AuthorDto> {
+
+//        logger.info("Starting getAllAuthor for requestId: $requestId")
+//        try {
+//            val
+//        }
+
+
         return authorRepository.findAll().map { author -> authorMapper.toDto(author) };
     }
 }
