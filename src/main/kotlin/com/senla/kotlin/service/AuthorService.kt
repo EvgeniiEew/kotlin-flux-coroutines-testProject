@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthorService {
     suspend fun saveAuthor(author: AuthorDto) : AuthorDto?
-    suspend fun getAllAuthor(): Flow<AuthorDto>
+    suspend fun findAllAuthors(): Flow<AuthorDto>
 }

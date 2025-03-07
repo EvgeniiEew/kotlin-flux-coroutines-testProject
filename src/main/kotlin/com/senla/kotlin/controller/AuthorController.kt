@@ -22,9 +22,9 @@ class AuthorController(@Autowired private val authorService: AuthorService) {
     }
 
     @GetMapping("/get")
-    suspend fun getAllAuthor(exchange: ServerWebExchange): Flow<AuthorDto> {
+    suspend fun getAllAuthors(exchange: ServerWebExchange): Flow<AuthorDto> {
         exchange.attributes["logMessage"] = "Fetching all authors"
-        return authorService.getAllAuthor()
+        return authorService.findAllAuthors()
     }
 
 }
