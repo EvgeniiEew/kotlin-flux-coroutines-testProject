@@ -18,7 +18,6 @@ class LoggingWebFilter : WebFilter {
         MDC.put("requestId", requestId)
         val mutatedExchange = exchange.mutate().build()
         val logMessage = mutatedExchange.attributes["logMessage"] as? String ?: "Processing request"
-        logger.info("Response sent: ${exchange.response.statusCode} - $logMessage ")
         return chain.filter(exchange)
             .doFinally { MDC.clear() }
             .contextWrite { it.put("requestId", requestId) }
