@@ -29,7 +29,9 @@ class AuthorServiceImpl(
     override suspend fun findAllAuthors(): Flow<AuthorDto> {
         logger.info("Fetching all authors")
         val authorFlow = authorRepository.findAll()
+        logger.info("Found all authors")
+        val authorDtoFlow = authorFlow.map { author -> authorMapper.toDto(author) }
         logger.info("Successfully fetched all authors")
-        return authorFlow.map { author -> authorMapper.toDto(author) }
+        return authorDtoFlow;
     }
 }
