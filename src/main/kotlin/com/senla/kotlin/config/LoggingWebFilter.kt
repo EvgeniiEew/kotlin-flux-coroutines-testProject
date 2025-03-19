@@ -1,5 +1,7 @@
 package com.senla.kotlin.config
 
+import kotlinx.coroutines.slf4j.MDCContext
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
@@ -11,15 +13,22 @@ import java.util.*
 
 @Component
 class LoggingWebFilter : WebFilter {
-    private val logger = LoggerFactory.getLogger(LoggingWebFilter::class.java)
-
-    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        val requestId = UUID.randomUUID().toString()
-        MDC.put("requestId", requestId)
-        val mutatedExchange = exchange.mutate().build()
-        val logMessage = mutatedExchange.attributes["logMessage"] as? String ?: "Processing request"
-        return chain.filter(exchange)
-            .doFinally { MDC.clear() }
-            .contextWrite { it.put("requestId", requestId) }
+    override fun filter(
+        exchange: ServerWebExchange, chain: WebFilterChain
+    ): Mono<Void> {
+        val traceId = exchange.request.headers["X-B3-TRACEID"]?.first()
+        MDC.put("requestId", traceId ?: UUID.randomUUID().toString())
+            return chain.filter(exchange)
     }
+
+
+//    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+//        val requestId = UUID.randomUUID().toString()
+//        MDC.put("requestId", requestId)
+//        val mutatedExchange = exchange.mutate().build()
+//        val logMessage = mutatedExchange.attributes["logMessage"] as? String ?: "Processing request"
+//        return chain.filter(exchange)
+//            .doFinally { MDC.clear() }
+//            .contextWrite { it.put("requestId", requestId) }
+//    }
 }
