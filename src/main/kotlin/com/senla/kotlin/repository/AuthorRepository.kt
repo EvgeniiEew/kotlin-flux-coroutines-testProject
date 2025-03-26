@@ -4,5 +4,5 @@ import com.senla.kotlin.domain.Author
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
 
-interface AuthorRepository: CoroutineCrudRepository<Author, String> {
+interface AuthorRepository : CoroutineCrudRepository<Author, String> {
 }

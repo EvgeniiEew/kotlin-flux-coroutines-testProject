@@ -16,9 +16,9 @@ class LoggingWebFilter : WebFilter {
     override fun filter(
         exchange: ServerWebExchange, chain: WebFilterChain
     ): Mono<Void> {
-        val traceId = exchange.request.headers["X-B3-TRACEID"]?.first()
-        MDC.put("requestId", traceId ?: UUID.randomUUID().toString())
-            return chain.filter(exchange)
+        val requestId = exchange.request.headers["X-B3-REQUESTID"]?.first()
+        MDC.put("requestId", requestId ?: UUID.randomUUID().toString())
+        return chain.filter(exchange)
     }
 
 
